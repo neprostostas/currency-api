@@ -1,23 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import axios from "axios" ;
+import {useEffect , useState} from "react";
 
 function App() {
+
+  const [money, setMoney] = useState([]);
+
+  const fetchCurrency = () => {
+    axios.get("https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json").then((res) => {
+      setMoney(res.data);
+      console.log(res.data)
+    })}
+
+    useEffect (() => {
+      fetchCurrency();
+    },[])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+
+      <h1 className="text">Currency API</h1>
+
+      <div className="list">
+        {money.map(r => {
+          return (
+            <div className="cell" key={r.r030}>
+              <p>Currency: {r.txt}</p>
+              <p className="cc">CC: {r.cc}</p>
+              <p>Rate: {r.rate}</p>
+              <p>Date: {r.exchangedate}</p>
+            </div>
+          )
+        })}
+      </div>
+      
     </div>
   );
 }
